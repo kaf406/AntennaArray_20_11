@@ -57,22 +57,7 @@ namespace AntennaArray
             Console.WriteLine("Расчёт ДН");
             Console.WriteLine("Theta |  Re(F)   |  Im(F)   | Abs(F) db |Phase(F) deg");
 
-            List<PatternValue> values = new List<PatternValue>();
-
-            for (var theta = ThetaMin; theta <= ThetaMax; theta += dTheta)
-            {
-                var f = Pattern(theta * toRad, X, lambda0);
-
-                Console.WriteLine("{0,4}  |  {1,6:F3}  |  {2,6:F3}  |  {3,7:F3}  |  {4,8:F3}",
-                    theta, f.Real, f.Imaginary,
-                    20 * Math.Log10(f.Magnitude), f.Phase * toDeg);
-
-                PatternValue value = new PatternValue();
-                value.Theta = theta;
-                value.Value = f;
-
-                values.Add(value);
-            }
+            var values = GetPattern(X, lambda0, ThetaMin, ThetaMax, dTheta);
 
             WritePatternToFile(values, "pattern.txt");
 
@@ -82,6 +67,31 @@ namespace AntennaArray
 
             Console.WriteLine("Положение главного максимума {0:f2} градусов", max_angle);
             Console.WriteLine("Ширина диаграммы направленности {0:f2} градусов", beam_width);
+        }
+
+        private static List<PatternValue> GetPattern(
+            double[] X, double Lambda,
+            double ThetaMin, double ThetaMax,
+            double dTheta)
+        {
+            var values = new List<PatternValue>();
+
+            for (var theta = ThetaMin; theta <= ThetaMax; theta += dTheta)
+            {
+                var f = Pattern(theta * toRad, X, Lambda);
+
+                Console.WriteLine("{0,4}  |  {1,6:F3}  |  {2,6:F3}  |  {3,7:F3}  |  {4,8:F3}",
+                    theta, f.Real, f.Imaginary,
+                    20 * Math.Log10(f.Magnitude), f.Phase * toDeg);
+
+                var value = new PatternValue();
+                value.Theta = theta;
+                value.Value = f;
+
+                values.Add(value);
+            }
+
+            return values;
         }
 
         private static Complex Pattern(double Theta, double[] X, double Lambda)
