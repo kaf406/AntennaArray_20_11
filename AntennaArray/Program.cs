@@ -54,7 +54,7 @@ namespace AntennaArray
 
             const double ThetaMin = -180;
             const double ThetaMax = 180;
-            const double dTheta = 0.1;
+            const double dTheta = 0.5;
 
             Console.WriteLine("Расчёт ДН");
             Console.WriteLine("Theta |  Re(F)   |  Im(F)   | Abs(F) db |Phase(F) deg");
@@ -69,6 +69,23 @@ namespace AntennaArray
 
             Console.WriteLine("Положение главного максимума {0:f2} градусов", max_angle);
             Console.WriteLine("Ширина диаграммы направленности {0:f2} градусов", beam_width);
+
+            var student1 = new Student();
+            student1.LastName = "Иванов";
+            student1.FirstName = "Иван";
+            student1.Patronymic = "Иванович";
+            student1.Birthday = new DateTime(2000, 1, 15);
+
+            var student2 = new Student();
+            student2.LastName = "Петров";
+            student2.FirstName = "Пётр";
+            student2.Patronymic = "Петрович";
+            student2.Birthday = new DateTime(2002, 7, 10);
+
+            student1.PrintToConsole();
+            Console.WriteLine();
+
+            student2.PrintToConsole();
         }
 
         private static List<PatternValue> GetPattern(
@@ -83,13 +100,13 @@ namespace AntennaArray
             {
                 var f = Pattern(theta * toRad, Theta0, X, Lambda);
 
-                Console.WriteLine("{0,4}  |  {1,6:F3}  |  {2,6:F3}  |  {3,7:F3}  |  {4,8:F3}",
-                    theta, f.Real, f.Imaginary,
-                    20 * Math.Log10(f.Magnitude), f.Phase * toDeg);
-
                 var value = new PatternValue();
                 value.Theta = theta;
                 value.Value = f;
+
+                Console.WriteLine("{0,4}  |  {1,6:F3}  |  {2,6:F3}  |  {3,7:F3}  |  {4,8:F3}",
+                    theta, f.Real, f.Imaginary,
+                    value.GetValueInDB(), value.GetPhaseInDeg());
 
                 values.Add(value);
             }
@@ -123,8 +140,8 @@ namespace AntennaArray
                 {
                     writer.WriteLine("{0};{1};{2};{3};{4}",
                         f.Theta, f.Value.Real, f.Value.Imaginary,
-                        20 * Math.Log10(f.Value.Magnitude),
-                        f.Value.Phase * toDeg);
+                        f.GetValueInDB(),
+                        f.GetPhaseInDeg());
                 }
 
             }
@@ -217,5 +234,31 @@ namespace AntennaArray
         public double Theta;
 
         public Complex Value;
+
+        public double GetValueInDB()
+        {
+            return 20 * Math.Log10(Value.Magnitude);
+        }
+
+        public double GetPhaseInDeg()
+        {
+            return Value.Phase * 180 / Math.PI;
+        }
+    }
+
+    class Student
+    {
+        public string FirstName;
+        public string LastName;
+        public string Patronymic;
+
+        //public int Age;
+        public DateTime Birthday;
+
+        public void PrintToConsole()
+        {
+            Console.WriteLine("Меня зовут {0} {1} {2}", LastName, FirstName, Patronymic);
+            Console.WriteLine("Мне {0} лет", Math.Ceiling((DateTime.Now - Birthday).Days / 365.0));
+        }
     }
 }
