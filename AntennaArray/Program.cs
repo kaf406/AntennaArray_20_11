@@ -86,6 +86,12 @@ namespace AntennaArray
             Console.WriteLine();
 
             student2.PrintToConsole();
+
+            var antenna1 = new Dipole();
+            antenna1.Length = lambda0 / 2;
+
+            var antenna2 = new Dipole();
+            antenna2.Length = lambda0;
         }
 
         private static List<PatternValue> GetPattern(
@@ -260,5 +266,32 @@ namespace AntennaArray
             Console.WriteLine("Меня зовут {0} {1} {2}", LastName, FirstName, Patronymic);
             Console.WriteLine("Мне {0} лет", Math.Ceiling((DateTime.Now - Birthday).Days / 365.0));
         }
+    }
+
+
+    class Antenna
+    {
+        public virtual Complex Pattern(double Theta, double Lambda)
+        {
+            return 1;
+        }
+    }
+
+    class Dipole : Antenna
+    {
+        public double Length;
+
+        public override Complex Pattern(double Theta, double Lambda)
+        {
+            var k = 2 * Math.PI / Lambda;
+            var kL = k * Length;
+
+            return (Math.Cos(kL * Math.Sin(Theta)) - Math.Cos(kL)) / (Math.Cos(Theta) * (1 - Math.Cos(kL)));
+        }
+    }
+
+    class AntennaArray : Antenna
+    {
+
     }
 }
