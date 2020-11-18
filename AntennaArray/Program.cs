@@ -59,7 +59,7 @@ namespace AntennaArray
             Console.WriteLine("Расчёт ДН");
             Console.WriteLine("Theta |  Re(F)   |  Im(F)   | Abs(F) db |Phase(F) deg");
 
-            var values = GetPattern(X, lambda0, ThetaMin, ThetaMax, dTheta);
+            var values = GetPattern(Theta0, X, lambda0, ThetaMin, ThetaMax, dTheta);
 
             WritePatternToFile(values, "pattern.txt");
 
@@ -72,6 +72,7 @@ namespace AntennaArray
         }
 
         private static List<PatternValue> GetPattern(
+            double Theta0,
             double[] X, double Lambda,
             double ThetaMin, double ThetaMax,
             double dTheta)
@@ -80,7 +81,7 @@ namespace AntennaArray
 
             for (var theta = ThetaMin; theta <= ThetaMax; theta += dTheta)
             {
-                var f = Pattern(theta * toRad, X, Lambda);
+                var f = Pattern(theta * toRad, Theta0, X, Lambda);
 
                 Console.WriteLine("{0,4}  |  {1,6:F3}  |  {2,6:F3}  |  {3,7:F3}  |  {4,8:F3}",
                     theta, f.Real, f.Imaginary,
@@ -96,14 +97,14 @@ namespace AntennaArray
             return values;
         }
 
-        private static Complex Pattern(double Theta, double[] X, double Lambda)
+        private static Complex Pattern(double Theta, double Theta0, double[] X, double Lambda)
         {
             Complex result = 0;
             double k = 2 * Math.PI / Lambda;
 
             for (int n = 0; n < X.Length; n++)
             {
-                var phase = k * X[n] * Math.Sin(Theta);
+                var phase = k * X[n] * (Math.Sin(Theta) - Math.Sin(Theta0));
                 var f = Complex.Exp(new Complex(0, phase));
 
                 result += f;
