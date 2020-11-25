@@ -43,25 +43,34 @@ namespace AntennaArray
             //Console.WriteLine("\tизотропного излучателя {0}", knd_uniform);
             //Console.WriteLine("\tрупора {0}", knd_rupor);
 
-            const double min_length = 0.1;
-            const double max_length = 2;
-            const double dLenth = 0.1;
+            //const double min_length = 0.1;
+            //const double max_length = 2;
+            //const double dLenth = 0.1;
 
-            var length = min_length;
+            //var length = min_length;
 
-            var vibrator = new Vibrator();
+            //var vibrator = new Vibrator();
 
-            while (length <= max_length)
+            //while (length <= max_length)
+            //{
+            //    vibrator.Length = length;
+            //    var knd = vibrator.GetKND();
+            //    length += dLenth;
+
+            //    Console.WriteLine("{0:F1}    -    {1:F3}", vibrator.Length, knd);
+            //}
+
+            var antenna_array = new AntennaArray();
+            antenna_array.Items = new AntennaArrayItem[16];
+            for (var i = 0; i < antenna_array.Items.Length; i++)
             {
-                vibrator.Length = length;
-                var knd = vibrator.GetKND();
-                length += dLenth;
-
-                Console.WriteLine("{0:F1}    -    {1:F3}", vibrator.Length, knd);
+                antenna_array.Items[i] = new AntennaArrayItem();
+                antenna_array.Items[i].X = i * 0.5;
+                antenna_array.Items[i].Item = new Vibrator();
             }
-        }
 
-       
+            PrintPattern(antenna_array, -Math.PI / 2, Math.PI/2, 0.1 * toRad);
+        }
 
         private static double F(double x)
         {
@@ -78,7 +87,7 @@ namespace AntennaArray
                 value.Theta = theta;
                 value.Value = f;
 
-                Console.WriteLine("{0,4:f0}  |  {1,6:F3}  |  {2,6:F3}  |  {3,7:F3}  |  {4,8:F3}",
+                Console.WriteLine("{0,4:f1}  |  {1,6:F3}  |  {2,6:F3}  |  {3,7:F3}  |  {4,8:F3}",
                     theta * toDeg, f.Real, f.Imaginary,
                     value.GetValueInDB(), value.GetPhaseInDeg());
             }
