@@ -27,7 +27,78 @@ namespace AntennaArray
 
             /* --------------------------------------------------------- */
 
-           
+
+            Antenna antenna = new Vibrator();
+
+            const double ThMin = -90 * toRad;
+            const double ThMax = 90 * toRad;
+            const double dTh = 1 * toRad;
+            //PrintPattern(antenna, ThMin, ThMax, dTh);
+            //PrintPattern(new Vibrator(), ThMin, ThMax, dTh);
+            //PrintPattern(new Uniform(), ThMin, ThMax, dTh);
+
+            const double dx = 0.0001;
+
+            const double x1 = 0;
+            const double x2 = 1;
+
+            double S = 0;
+
+            double x = x1;
+            while (x <= x2)
+            {
+                var f = F(x);
+                var dS = f * dx;
+                S += dS;
+
+                x += dx;
+            }
+
+            Console.WriteLine("Значение интеграла равно {0}", S);
+
+            var result = GetIntegral(F, 0, 1, 0.001);
+
+            var knd = 2 / GetIntegral(x => Math.Pow(antenna.Pattern(x).Magnitude, 2) * Math.Cos(x),
+                -Math.PI/2, Math.PI/2, 0.00001);
+
+            Console.WriteLine("КНД вибратора равно {0}", knd);
+        }
+
+        public static double GetIntegral(Func<double, double> f, double x1, double x2, double dx)
+        {
+            double S = 0;
+
+            double x = x1;
+            while (x <= x2)
+            {
+                var dS = f(x) * dx;
+                S += dS;
+
+                x += dx;
+            }
+
+            return S;
+        }
+
+        private static double F(double x)
+        {
+            return 3 * x * x;
+        }
+
+        private static void PrintPattern(Antenna antenna, double ThMin, double ThMax, double dTh)
+        {
+            for (var theta = ThMin; theta <= ThMax; theta += dTh)
+            {
+                var f = antenna.Pattern(theta);
+
+                var value = new PatternValue();
+                value.Theta = theta;
+                value.Value = f;
+
+                Console.WriteLine("{0,4:f0}  |  {1,6:F3}  |  {2,6:F3}  |  {3,7:F3}  |  {4,8:F3}",
+                    theta * toDeg, f.Real, f.Imaginary,
+                    value.GetValueInDB(), value.GetPhaseInDeg());
+            }
         }
 
         private static List<PatternValue> GetPattern(
