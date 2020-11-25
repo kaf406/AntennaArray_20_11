@@ -34,14 +34,31 @@ namespace AntennaArray
             //const double ThMax = 90 * toRad;
             //const double dTh = 1 * toRad;
 
-            var knd_vibrator_05 = new Vibrator().GetKND();
-            var knd_uniform = new Uniform().GetKND();
-            var knd_rupor = new Rupor().GetKND();
+            //var knd_vibrator_05 = new Vibrator().GetKND();
+            //var knd_uniform = new Uniform().GetKND();
+            //var knd_rupor = new Rupor().GetKND();
 
-            Console.WriteLine("КНД:");
-            Console.WriteLine("\tвибратора {0}", knd_vibrator_05);
-            Console.WriteLine("\tизотропного излучателя {0}", knd_uniform);
-            Console.WriteLine("\tрупора {0}", knd_rupor);
+            //Console.WriteLine("КНД:");
+            //Console.WriteLine("\tвибратора {0}", knd_vibrator_05);
+            //Console.WriteLine("\tизотропного излучателя {0}", knd_uniform);
+            //Console.WriteLine("\tрупора {0}", knd_rupor);
+
+            const double min_length = 0.1;
+            const double max_length = 2;
+            const double dLenth = 0.1;
+
+            var length = min_length;
+
+            var vibrator = new Vibrator();
+
+            while (length <= max_length)
+            {
+                vibrator.Length = length;
+                var knd = vibrator.GetKND();
+                length += dLenth;
+
+                Console.WriteLine("{0:F1}    -    {1:F3}", vibrator.Length, knd);
+            }
         }
 
        
