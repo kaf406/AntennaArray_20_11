@@ -7,10 +7,18 @@ namespace AntennaArray
     {
         public abstract Complex Pattern(double Theta);
 
-        //public double GetKND()
-        //{
+        public double GetKND()
+        {
+            const double th_min = -Math.PI / 2;
+            const double th_max = Math.PI / 2;
+            const double dth = 0.1 * Math.PI / 180;
 
-        //}
+            var integral = MathAnalysis.GetIntegral(
+                th => Math.Pow(Pattern(th).Magnitude, 2) * Math.Cos(th),
+                th_min, th_max, dth);
+
+            return 2 / integral;
+        }
     }
 
     class Uniform : Antenna

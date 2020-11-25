@@ -28,57 +28,23 @@ namespace AntennaArray
             /* --------------------------------------------------------- */
 
 
-            Antenna antenna = new Vibrator();
+            //Antenna antenna = new Vibrator();
 
-            const double ThMin = -90 * toRad;
-            const double ThMax = 90 * toRad;
-            const double dTh = 1 * toRad;
-            //PrintPattern(antenna, ThMin, ThMax, dTh);
-            //PrintPattern(new Vibrator(), ThMin, ThMax, dTh);
-            //PrintPattern(new Uniform(), ThMin, ThMax, dTh);
+            //const double ThMin = -90 * toRad;
+            //const double ThMax = 90 * toRad;
+            //const double dTh = 1 * toRad;
 
-            const double dx = 0.0001;
+            var knd_vibrator_05 = new Vibrator().GetKND();
+            var knd_uniform = new Uniform().GetKND();
+            var knd_rupor = new Rupor().GetKND();
 
-            const double x1 = 0;
-            const double x2 = 1;
-
-            double S = 0;
-
-            double x = x1;
-            while (x <= x2)
-            {
-                var f = F(x);
-                var dS = f * dx;
-                S += dS;
-
-                x += dx;
-            }
-
-            Console.WriteLine("Значение интеграла равно {0}", S);
-
-            var result = GetIntegral(F, 0, 1, 0.001);
-
-            var knd = 2 / GetIntegral(x => Math.Pow(antenna.Pattern(x).Magnitude, 2) * Math.Cos(x),
-                -Math.PI/2, Math.PI/2, 0.00001);
-
-            Console.WriteLine("КНД вибратора равно {0}", knd);
+            Console.WriteLine("КНД:");
+            Console.WriteLine("\tвибратора {0}", knd_vibrator_05);
+            Console.WriteLine("\tизотропного излучателя {0}", knd_uniform);
+            Console.WriteLine("\tрупора {0}", knd_rupor);
         }
 
-        public static double GetIntegral(Func<double, double> f, double x1, double x2, double dx)
-        {
-            double S = 0;
-
-            double x = x1;
-            while (x <= x2)
-            {
-                var dS = f(x) * dx;
-                S += dS;
-
-                x += dx;
-            }
-
-            return S;
-        }
+       
 
         private static double F(double x)
         {
