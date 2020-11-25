@@ -41,7 +41,13 @@ namespace AntennaArray
 
             var l = Math.PI * 2 * Length;
 
-            return (Math.Cos(l * Math.Sin(Theta)) - Math.Cos(l)) / (Math.Cos(Theta) * (1 - Math.Cos(l)));
+            var A = Math.Cos(l * Math.Sin(Theta)) - Math.Cos(l);
+            var B = Math.Cos(Theta) * (1 - Math.Cos(l));
+
+            if (A == 0 && B == 0)
+                return 1;
+            else
+                return A / B;
         }
     }
 
