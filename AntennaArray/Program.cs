@@ -27,71 +27,7 @@ namespace AntennaArray
 
             /* --------------------------------------------------------- */
 
-            Console.WriteLine("Расчёт ДН антенной решётки");
-            Console.WriteLine("Частота {0} ГГц, длина волны {1} см", f0, lambda0);
-
-            Console.WriteLine("Требуется обеспечить ширину луча {0} градусов", 2 * Th07 * toDeg);
-
-            Console.WriteLine("Размер апертуры решётки {0} см ({1}м)", L1, L1 / 100);
-
-            var dx = lambda0 / (1 + Math.Abs(Math.Sin(Th0max)));
-
-            Console.WriteLine("Шаг между элементами решётки {0:f2} см", dx);
-
-            int N = (int)Math.Ceiling(L1 / dx); // Число элементов в решётке
-
-            Console.WriteLine("Число элементов в решётке {0}", N);
-
-            var L = (N - 1) * dx; // Физический размер апертуры
-
-            double[] X = new double[N];
-            for (var i = 0; i < X.Length; i++)
-            {
-                X[i] = i * dx - L / 2;
-            }
-
-            //Complex F = Pattern(0, X, lambda0);
-
-            const double ThetaMin = -180;
-            const double ThetaMax = 180;
-            const double dTheta = 0.5;
-
-            Console.WriteLine("Расчёт ДН");
-            Console.WriteLine("Theta |  Re(F)   |  Im(F)   | Abs(F) db |Phase(F) deg");
-
-            var values = GetPattern(Theta0, X, lambda0, ThetaMin, ThetaMax, dTheta);
-
-            WritePatternToFile(values, "pattern.txt");
-
-            var max_angle = GetMainMaxAngle(values);
-
-            var beam_width = GetPatternWidth(values, max_angle);
-
-            Console.WriteLine("Положение главного максимума {0:f2} градусов", max_angle);
-            Console.WriteLine("Ширина диаграммы направленности {0:f2} градусов", beam_width);
-
-            var student1 = new Student();
-            student1.LastName = "Иванов";
-            student1.FirstName = "Иван";
-            student1.Patronymic = "Иванович";
-            student1.Birthday = new DateTime(2000, 1, 15);
-
-            var student2 = new Student();
-            student2.LastName = "Петров";
-            student2.FirstName = "Пётр";
-            student2.Patronymic = "Петрович";
-            student2.Birthday = new DateTime(2002, 7, 10);
-
-            student1.PrintToConsole();
-            Console.WriteLine();
-
-            student2.PrintToConsole();
-
-            var antenna1 = new Dipole();
-            antenna1.Length = lambda0 / 2;
-
-            var antenna2 = new Dipole();
-            antenna2.Length = lambda0;
+           
         }
 
         private static List<PatternValue> GetPattern(
@@ -250,48 +186,5 @@ namespace AntennaArray
         {
             return Value.Phase * 180 / Math.PI;
         }
-    }
-
-    class Student
-    {
-        public string FirstName;
-        public string LastName;
-        public string Patronymic;
-
-        //public int Age;
-        public DateTime Birthday;
-
-        public void PrintToConsole()
-        {
-            Console.WriteLine("Меня зовут {0} {1} {2}", LastName, FirstName, Patronymic);
-            Console.WriteLine("Мне {0} лет", Math.Ceiling((DateTime.Now - Birthday).Days / 365.0));
-        }
-    }
-
-
-    class Antenna
-    {
-        public virtual Complex Pattern(double Theta, double Lambda)
-        {
-            return 1;
-        }
-    }
-
-    class Dipole : Antenna
-    {
-        public double Length;
-
-        public override Complex Pattern(double Theta, double Lambda)
-        {
-            var k = 2 * Math.PI / Lambda;
-            var kL = k * Length;
-
-            return (Math.Cos(kL * Math.Sin(Theta)) - Math.Cos(kL)) / (Math.Cos(Theta) * (1 - Math.Cos(kL)));
-        }
-    }
-
-    class AntennaArray : Antenna
-    {
-
     }
 }
