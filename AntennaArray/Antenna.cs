@@ -14,7 +14,11 @@ namespace AntennaArray
             const double dth = 0.1 * Math.PI / 180;
 
             var integral = MathAnalysis.GetIntegral(
-                th => Math.Pow(Pattern(th).Magnitude, 2) * Math.Cos(th),
+                th =>
+                {
+                    var f_abs = Pattern(th).Magnitude;
+                    return f_abs * f_abs * Math.Cos(th);
+                },
                 th_min, th_max, dth);
 
             return 2 / integral;
