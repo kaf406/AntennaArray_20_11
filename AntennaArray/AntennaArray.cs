@@ -5,7 +5,17 @@ namespace AntennaArray
 {
     class AntennaArray : Antenna
     {
-        public AntennaArrayItem[] Items;
+        private AntennaArrayItem[] Items;
+
+        public AntennaArray(int N, double dx, Antenna ElementaryAntennaItem)
+        {
+            Items = new AntennaArrayItem[N];
+
+            for (var i = 0; i < N; i++)
+            {
+                Items[i] = new AntennaArrayItem(ElementaryAntennaItem, dx * i);
+            }
+        }
 
         public override Complex Pattern(double Theta)
         {
@@ -22,9 +32,15 @@ namespace AntennaArray
 
     class AntennaArrayItem : Antenna
     {
-        public Antenna Item;
+        private Antenna Item;
 
-        public double X;
+        private double X;
+
+        public AntennaArrayItem(Antenna ElementaryAntenna, double x)
+        {
+            Item = ElementaryAntenna;
+            X = x;
+        }
 
         public override Complex Pattern(double Theta)
         {

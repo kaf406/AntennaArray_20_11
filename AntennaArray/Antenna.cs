@@ -36,14 +36,39 @@ namespace AntennaArray
     class Vibrator : Antenna
     {
         /// <summary>Нормированная длина вибратора (длина, нормированная к длине волны)</summary>
-        public double Length = 0.5;
+        public double _Length;
+
+        public double Length
+        {
+            get
+            {
+                return _Length;
+            }
+            set
+            {
+                if (value <= 0)
+                    throw new Exception("Длина не должна быть меньше нуля!");
+
+                _Length = value;
+            }
+        }
+
+        public Vibrator()
+        {
+            _Length = 0.5;
+        }
+
+        public Vibrator(double Length)
+        {
+            _Length = Length;
+        }
 
         public override Complex Pattern(double Theta)
         {
             // (cos(k*L * sin(Theta)) - cos(k*L)) / (cos(Theta) * (1 - cos(k*L)))
             // (cos(2*PI*L * sin(Theta)) - cos(2*PI*L)) / (cos(Theta) * (1 - cos(2*PI*L)))
 
-            var l = Math.PI * 2 * Length;
+            var l = Math.PI * 2 * _Length;
 
             var A = Math.Cos(l * Math.Sin(Theta)) - Math.Cos(l);
             var B = Math.Cos(Theta) * (1 - Math.Cos(l));

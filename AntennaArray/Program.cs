@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
+using System.Runtime.Intrinsics;
 
 namespace AntennaArray
 {
@@ -27,16 +28,38 @@ namespace AntennaArray
 
             /* --------------------------------------------------------- */
 
-            var antenna_array = new AntennaArray();
-            antenna_array.Items = new AntennaArrayItem[16];
-            for (var i = 0; i < antenna_array.Items.Length; i++)
-            {
-                antenna_array.Items[i] = new AntennaArrayItem();
-                antenna_array.Items[i].X = i * 0.5;
-                antenna_array.Items[i].Item = new Vibrator();
-            }
+            var M = new Matrix(3, 3);
 
-            PrintPattern(antenna_array, -Math.PI / 2, Math.PI/2, 0.1 * toRad);
+            M[0, 0] = 5;
+            M[0, 1] = 4;
+            M[0, 2] = 7;
+
+            for(var i = 0; i < M.M; i++)
+                for (var j = 0; j < M.N; j++)
+                    M[i, j] = i + j;
+
+            var X = new Vector2D(5, 7);
+            var Y = new Vector2D(10, 12);
+
+            var Z = X + Y;
+            var Z1 = X * 5;
+            var Z2 = X / 5;
+
+            Console.WriteLine("|X| = {0}; angle(X) = {1}", X.Radius, X.Angle);
+            Console.WriteLine("|Y| = {0}; angle(Y) = {1}", Y.Radius, Y.Angle);
+
+            Console.ReadLine();
+
+            //Vibrator antenna = new Vibrator(0.2);
+            //var f_30 = antenna.Pattern(30 * toDeg);
+            //antenna._Length = 0.3;
+
+            //Console.WriteLine("Длина вибратора {0}", antenna.Length);
+            //antenna.Length = 0.7;
+
+            var antenna_array = new AntennaArray(16, 0.5, new Vibrator(0.5));
+
+            PrintPattern(antenna_array, -Math.PI / 2, Math.PI / 2, 0.1 * toRad);
         }
 
         private static double F(double x)
