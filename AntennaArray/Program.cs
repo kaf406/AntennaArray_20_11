@@ -57,7 +57,7 @@ namespace AntennaArray
             //Console.WriteLine("Длина вибратора {0}", antenna.Length);
             //antenna.Length = 0.7;
 
-            var antenna_array = new AntennaArray(16, 0.5, new Vibrator(0.5));
+            var antenna_array = new AntennaArray1D(16, 0.5, new Vibrator(0.5));
 
             PrintPattern(antenna_array, -Math.PI / 2, Math.PI / 2, 0.1 * toRad);
         }

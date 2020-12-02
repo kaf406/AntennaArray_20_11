@@ -3,17 +3,17 @@ using System.Numerics;
 
 namespace AntennaArray
 {
-    class AntennaArray : Antenna
+    class AntennaArray1D : Antenna
     {
-        private AntennaArrayItem[] Items;
+        private AntennaArrayItem1D[] Items;
 
-        public AntennaArray(int N, double dx, Antenna ElementaryAntennaItem)
+        public AntennaArray1D(int N, double dx, Antenna ElementaryAntennaItem)
         {
-            Items = new AntennaArrayItem[N];
+            Items = new AntennaArrayItem1D[N];
 
             for (var i = 0; i < N; i++)
             {
-                Items[i] = new AntennaArrayItem(ElementaryAntennaItem, dx * i);
+                Items[i] = new AntennaArrayItem1D(ElementaryAntennaItem, dx * i);
             }
         }
 
@@ -30,13 +30,13 @@ namespace AntennaArray
         }
     }
 
-    class AntennaArrayItem : Antenna
+    class AntennaArrayItem1D : Antenna
     {
         private Antenna Item;
 
         private double X;
 
-        public AntennaArrayItem(Antenna ElementaryAntenna, double x)
+        public AntennaArrayItem1D(Antenna ElementaryAntenna, double x)
         {
             Item = ElementaryAntenna;
             X = x;
